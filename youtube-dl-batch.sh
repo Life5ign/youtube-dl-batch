@@ -39,6 +39,12 @@ youtube-dl --no-progress --batch-file $YOUTUBE_DL_VIDEO_BATCH_FILE --no-overwrit
 youtube-dl --no-progress --yes-playlist --extract-audio --audio-format mp3 --batch-file $YOUTUBE_DL_PLAYLIST_BATCH_FILE --output "./%(playlist_title)s/%(playlist_index)s-%(title)s.%(ext)s" --no-overwrites --restrict-filenames && sed -E -i '' 's/(^[^#])/#&/' $YOUTUBE_DL_PLAYLIST_BATCH_FILE
 
 #Download items from my channel's "audio" and "video" playlists, as audio and video respectively, using a local archive file to prevent re-downloading items that remain in the playlists.
+
+#check to see if the file "archive" exists and create it if it doesn't
+if [ ! -f $DIR/archive ]; then
+       echo 'Creating regular file "archive..."' && touch $DIR/archive
+fi
+
 #First, copy the archive file to diff it later if useful
 cp $DIR/archive $DIR/archive.b
 

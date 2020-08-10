@@ -1,0 +1,4 @@
+* * * * * <your-shell> -lc "<absolute-path-to-repo>/youtube-dl-batch.sh >><absolute-path-to-repo>/batch.log 2>&1" 
+* * * * * pkill -f "<absolute-path-to-youtube-dl-batch.sh>"
+* * * * * pkill -f "/usr/local/bin/youtube-dl"
+
