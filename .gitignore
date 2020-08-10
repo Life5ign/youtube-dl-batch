@@ -1,0 +1,7 @@
+**/*.log
+**/*archive*
+*.b
+*.batch
+**/*.swp
+**/*.pyc
+init
