@@ -36,7 +36,7 @@ youtube-dl --no-progress --extract-audio --audio-format mp3 --batch-file $YOUTUB
 youtube-dl --no-progress --batch-file $YOUTUBE_DL_VIDEO_BATCH_FILE --no-overwrites --restrict-filenames && sed -E -i '' 's/(^[^#])/#&/' $YOUTUBE_DL_VIDEO_BATCH_FILE
 
 #Download Playlists as audio from batch files
-youtube-dl --no-progress --yes-playlist --extract-audio --audio-format mp3 --batch-file $YOUTUBE_DL_PLAYLIST_BATCH_FILE --output "./%(playlist_title)s/%(playlist_index)s-%(title)s.%(ext)s" --no-overwrites --restrict-filenames && sed -E -i '' 's/(^[^#])/#&/' $YOUTUBE_DL_PLAYLIST_BATCH_FILE
+youtube-dl --no-progress --yes-playlist --extract-audio --audio-format mp3 --batch-file $YOUTUBE_DL_PLAYLIST_BATCH_FILE --output "./%(playlist_title)s/%(playlist_index)s-%(title)s.%(ext)s" --no-overwrites --restrict-filenames --sleep-interval 5 --max-sleep-interval 10 && sed -E -i '' 's/(^[^#])/#&/' $YOUTUBE_DL_PLAYLIST_BATCH_FILE
 
 #Download items from my channel's "audio" and "video" playlists, as audio and video respectively, using a local archive file to prevent re-downloading items that remain in the playlists.
 
@@ -49,8 +49,8 @@ fi
 cp $DIR/archive $DIR/archive.b
 
 #audio
-youtube-dl --verbose --no-progress --yes-playlist --extract-audio --audio-format mp3 --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" $CHANNEL_AUDIO_PLAYLIST
+youtube-dl --verbose --no-progress --yes-playlist --extract-audio --audio-format mp3 --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" --sleep-interval 5 --max-sleep-interval 10 $CHANNEL_AUDIO_PLAYLIST
 
 #video
-youtube-dl --verbose --no-progress --retries "infinite" --fragment-retries "infinite" --yes-playlist --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" $CHANNEL_VIDEO_PLAYLIST
+youtube-dl --verbose --no-progress --retries "infinite" --fragment-retries "infinite" --yes-playlist --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" --sleep-interval 5 --max-sleep-interval 10 $CHANNEL_VIDEO_PLAYLIST
 
