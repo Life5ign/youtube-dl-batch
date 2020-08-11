@@ -49,8 +49,8 @@ fi
 cp $DIR/archive $DIR/archive.b
 
 #audio
-youtube-dl --verbose --no-progress --yes-playlist --extract-audio --audio-format mp3 --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE $CHANNEL_AUDIO_PLAYLIST
+youtube-dl --verbose --no-progress --yes-playlist --extract-audio --audio-format mp3 --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" $CHANNEL_AUDIO_PLAYLIST
 
 #video
-youtube-dl --verbose --no-progress --retries "infinite" --fragment-retries "infinite" --yes-playlist --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE $CHANNEL_VIDEO_PLAYLIST
+youtube-dl --verbose --no-progress --retries "infinite" --fragment-retries "infinite" --yes-playlist --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" $CHANNEL_VIDEO_PLAYLIST
 
