@@ -3,7 +3,7 @@
 #define the directory containing the script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-#source init file
+#source init file with user settings
 source $DIR/init
 
 #formatting, script name, and date for logging purposes
@@ -52,5 +52,5 @@ cp $DIR/archive $DIR/archive.b
 youtube-dl --verbose --no-progress --yes-playlist --extract-audio --audio-format mp3 --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" --sleep-interval 5 --max-sleep-interval 10 $CHANNEL_AUDIO_PLAYLIST
 
 #video
-youtube-dl --verbose --no-progress --retries "infinite" --fragment-retries "infinite" --yes-playlist --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" --sleep-interval 5 --max-sleep-interval 10 $CHANNEL_VIDEO_PLAYLIST
+youtube-dl --merge-output-format mkv --verbose --no-progress --retries "infinite" --fragment-retries "infinite" --yes-playlist --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" --sleep-interval 5 --max-sleep-interval 10 $CHANNEL_VIDEO_PLAYLIST
 
