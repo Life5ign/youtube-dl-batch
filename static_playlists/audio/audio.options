@@ -1,0 +1,12 @@
+--verbose
+--no-progress
+--yes-playlist
+--extract-audio
+#--audio-format mp3
+--no-overwrites
+--restrict-filenames
+--output "./%(uploader)s/%(title)s-%(id)s.%(ext)s"
+--sleep-interval 5
+--max-sleep-interval 10
+
+
