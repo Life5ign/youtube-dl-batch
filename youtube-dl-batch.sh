@@ -19,9 +19,11 @@ export PATH=~/.pyenv/shims:~/.pyenv/bin:"$PATH"
 echo "PATH is now set to: $PATH"
 
 #define local batch file variables
-YOUTUBE_DL_AUDIO_BATCH_FILE="$DIR/audio.batch"
-YOUTUBE_DL_VIDEO_BATCH_FILE="$DIR/video.batch"
-YOUTUBE_DL_PLAYLIST_BATCH_FILE="$DIR/playlist.batch"
+YOUTUBE_DL_AUDIO_BATCH_FILE="$DIR/batch_files/audio.batch"
+YOUTUBE_DL_VIDEO_BATCH_FILE="$DIR/batch_files/video.batch"
+YOUTUBE_DL_PLAYLIST_BATCH_FILE="$DIR/batch_files/playlist.batch"
+
+#define archive file
 YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE="$DIR/archive"
 
 #cd to download directory
