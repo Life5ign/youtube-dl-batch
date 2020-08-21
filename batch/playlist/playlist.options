@@ -1,0 +1,9 @@
+--no-progress
+--yes-playlist
+--extract-audio
+#--audio-format mp3
+--output "./%(playlist_title)s/%(playlist_index)s-%(title)s.%(ext)s"
+--no-overwrites
+--restrict-filenames
+--sleep-interval 5
+--max-sleep-interval 10
