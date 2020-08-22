@@ -1,12 +1,12 @@
 #!/bin/bash
 
-#define the directory containing the script
+#define the directory containing this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
-#source init file with user settings
+#source init file with user specific settings
 source $DIR/init
 
-#formatting, script name, and date for logging purposes
+#log info
 echo "START_LOGFILE"
 date && echo ""
 echo "Running $0"
@@ -14,43 +14,57 @@ echo "Path is by default to: $PATH"
 echo "Using $(which youtube-dl)"
 echo "The system python, before modifying PATH, is $(which python)"
 
-#set PATH correctly in order to use pyenv, not system python
+#set PATH in order to use pyenv, not system python
 export PATH=~/.pyenv/shims:~/.pyenv/bin:"$PATH"
 echo "PATH is now set to: $PATH"
+echo "Now using the following python: $(which python)"
 
 #define local batch file variables
-YOUTUBE_DL_AUDIO_BATCH_FILE="$DIR/audio.batch"
-YOUTUBE_DL_VIDEO_BATCH_FILE="$DIR/video.batch"
-YOUTUBE_DL_PLAYLIST_BATCH_FILE="$DIR/playlist.batch"
-YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE="$DIR/archive"
+AUDIO_DIR="$DIR/batch/audio"
+VIDEO_DIR="$DIR/batch/video"
+ALBUM_DIR="$DIR/batch/album"
+SERIES_DIR="$DIR/batch/series"
 
-#cd to download directory
-cd $YOUTUBE_DL_DOWNLOAD_DIR
+AUDIO_BATCH_FILE="$AUDIO_DIR/audio.batch"
+VIDEO_BATCH_FILE="$VIDEO_DIR/video.batch"
+ALBUM_BATCH_FILE="$ALBUM_DIR/album.batch"
+SERIES_BATCH_FILE="$SERIES_DIR/series.batch"
 
-#Download Audio from batch files
-#comment out completed URLs in the batch file
-youtube-dl --no-progress --extract-audio --audio-format mp3 --batch-file $YOUTUBE_DL_AUDIO_BATCH_FILE --no-overwrites --restrict-filenames && sed -E -i '' 's/(^[^#])/#&/' $YOUTUBE_DL_AUDIO_BATCH_FILE
+#define directories for static playlist download configuration
+STATIC_PLAYLIST_AUDIO_DIR="$DIR/static_playlists/audio"
+STATIC_PLAYLIST_VIDEO_DIR="$DIR/static_playlists/video"
 
-#Download Video from batch files
-#comment out completed URLs in the batch file
-youtube-dl --no-progress --batch-file $YOUTUBE_DL_VIDEO_BATCH_FILE --no-overwrites --restrict-filenames && sed -E -i '' 's/(^[^#])/#&/' $YOUTUBE_DL_VIDEO_BATCH_FILE
-
-#Download Playlists as audio from batch files
-youtube-dl --no-progress --yes-playlist --extract-audio --audio-format mp3 --batch-file $YOUTUBE_DL_PLAYLIST_BATCH_FILE --output "./%(playlist_title)s/%(playlist_index)s-%(title)s.%(ext)s" --no-overwrites --restrict-filenames --sleep-interval 5 --max-sleep-interval 10 && sed -E -i '' 's/(^[^#])/#&/' $YOUTUBE_DL_PLAYLIST_BATCH_FILE
-
-#Download items from my channel's "audio" and "video" playlists, as audio and video respectively, using a local archive file to prevent re-downloading items that remain in the playlists.
+#define archive file
+ARCHIVE_FILE="$DIR/archive"
 
 #check to see if the file "archive" exists and create it if it doesn't
-if [ ! -f $DIR/archive ]; then
-       echo 'Creating regular file "archive..."' && touch $DIR/archive
+if [ ! -f $ARCHIVE_FILE ]; then
+       echo 'Creating archive file..."' && touch $ARCHIVE_FILE
 fi
 
-#First, copy the archive file to diff it later if useful
-cp $DIR/archive $DIR/archive.b
+#copy the archive file to diff it later if useful
+cp $ARCHIVE_FILE "$ARCHIVE_FILE.b" 
+
+#cd to download directory
+cd $DOWNLOAD_DIR
+
+#Download Audio from batch files
+youtube-dl --download-archive $ARCHIVE_FILE --config-location $AUDIO_DIR/audio.options --batch-file $AUDIO_BATCH_FILE
+
+#Download Video from batch files
+youtube-dl --download-archive $ARCHIVE_FILE --config-location $VIDEO_DIR/video.options --batch-file $VIDEO_BATCH_FILE
+
+#Download albums as audio from batch files
+youtube-dl --download-archive $ARCHIVE_FILE --config-location $ALBUM_DIR/album.options --batch-file $ALBUM_BATCH_FILE
+
+#Download series as video from batch files
+youtube-dl --download-archive $ARCHIVE_FILE --config-location $SERIES_DIR/series.options --batch-file $SERIES_BATCH_FILE
+
+#static playlists
 
 #audio
-youtube-dl --verbose --no-progress --yes-playlist --extract-audio --audio-format mp3 --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" --sleep-interval 5 --max-sleep-interval 10 $CHANNEL_AUDIO_PLAYLIST
+youtube-dl --download-archive $ARCHIVE_FILE --config-location $STATIC_PLAYLIST_AUDIO_DIR/audio.options $STATIC_PLAYLIST_AUDIO_URL
 
 #video
-youtube-dl --merge-output-format mkv --verbose --no-progress --retries "infinite" --fragment-retries "infinite" --yes-playlist --no-overwrites --restrict-filenames --download-archive $YOUTUBE_DL_PLAYLIST_ARCHIVE_FILE --output "./%(uploader)s/%(title)s-%(id)s.%(ext)s" --sleep-interval 5 --max-sleep-interval 10 $CHANNEL_VIDEO_PLAYLIST
+youtube-dl --download-archive $ARCHIVE_FILE --config-location $STATIC_PLAYLIST_VIDEO_DIR/video.options $STATIC_PLAYLIST_VIDEO_URL
 
