@@ -5,6 +5,7 @@
 **/*.out
 **/*archive*
 youtube-dl-batch.init
-batch
-tmp/**
-!tmp
+config/**
+!config/base_config.template
+batch/**
+!batch/example_download_profile/**
