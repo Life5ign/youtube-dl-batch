@@ -2,10 +2,8 @@
 --no-progress
 --retries "infinite"
 --fragment-retries "infinite"
---yes-playlist
 --no-overwrites
---merge-output-format mkv
 --restrict-filenames
---output "./%(uploader)s/%(title)s_%(id)s.%(ext)s"
+--output "./%(series)s/Season_%(season_number)s/%(episode_number)s_%(episode)s_%(id)s.%(ext)s"
 --sleep-interval 5
---max-sleep-interval 10 
+--max-sleep-interval 10

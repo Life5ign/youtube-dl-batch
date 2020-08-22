@@ -1,8 +1,11 @@
+--verbose
 --no-progress
+--retries "infinite"
+--fragment-retries "infinite"
 --yes-playlist
 --extract-audio
 #--audio-format mp3
---output "./%(playlist_title)s/%(playlist_index)s-%(title)s.%(ext)s"
+--output "./%(artist)s/%(album)s/%(track_number)s_%(track)s-%(title)s.%(ext)s"
 --no-overwrites
 --restrict-filenames
 --sleep-interval 5

@@ -22,11 +22,13 @@ echo "Now using the following python: $(which python)"
 #define local batch file variables
 AUDIO_DIR="$DIR/batch/audio"
 VIDEO_DIR="$DIR/batch/video"
-PLAYLIST_DIR="$DIR/batch/playlist"
+ALBUM_DIR="$DIR/batch/album"
+SERIES_DIR="$DIR/batch/series"
 
 AUDIO_BATCH_FILE="$AUDIO_DIR/audio.batch"
 VIDEO_BATCH_FILE="$VIDEO_DIR/video.batch"
-PLAYLIST_BATCH_FILE="$PLAYLIST_DIR/playlist.batch"
+ALBUM_BATCH_FILE="$ALBUM_DIR/album.batch"
+SERIES_BATCH_FILE="$SERIES_DIR/series.batch"
 
 #define directories for static playlist download configuration
 STATIC_PLAYLIST_AUDIO_DIR="$DIR/static_playlists/audio"
@@ -52,8 +54,11 @@ youtube-dl --download-archive $ARCHIVE_FILE --config-location $AUDIO_DIR/audio.o
 #Download Video from batch files
 youtube-dl --download-archive $ARCHIVE_FILE --config-location $VIDEO_DIR/video.options --batch-file $VIDEO_BATCH_FILE
 
-#Download Playlists as audio from batch files
-youtube-dl --download-archive $ARCHIVE_FILE --config-location $PLAYLIST_DIR/playlist.options --batch-file $PLAYLIST_BATCH_FILE
+#Download albums as audio from batch files
+youtube-dl --download-archive $ARCHIVE_FILE --config-location $ALBUM_DIR/album.options --batch-file $ALBUM_BATCH_FILE
+
+#Download series as video from batch files
+youtube-dl --download-archive $ARCHIVE_FILE --config-location $SERIES_DIR/series.options --batch-file $SERIES_BATCH_FILE
 
 #static playlists
 

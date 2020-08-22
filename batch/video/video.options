@@ -1,3 +1,9 @@
+--verbose
 --no-progress
+--retries "infinite"
+--fragment-retries "infinite"
 --no-overwrites
 --restrict-filenames
+--output "./%(uploader)s/%(title)s_%(id)s.%(ext)s"
+--sleep-interval 5
+--max-sleep-interval 10
