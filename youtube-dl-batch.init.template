@@ -1,0 +1,7 @@
+#source file for shell scripts
+#copy this file into the current directory, removing the ".template" suffix
+#insert your values
+#
+#define variables
+#download location
+YOUTUBE_DL_DOWNLOAD_DIR=''
