@@ -1,8 +1,9 @@
 **/*.log
-**/*archive*
-*.b
-*.batch
+**/*.b
 **/*.swp
 **/*.pyc
-init
 **/*.out
+**/*archive*
+youtube-dl-batch.init
+batch
+tmp/**

@@ -1,0 +1,5 @@
+#user youtube-dl config file, used by default
+--verbose
+--restrict-filenames
+--no-overwrites
+--no-mtime

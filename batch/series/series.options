@@ -1,9 +1,0 @@
---verbose
---no-progress
---retries "infinite"
---fragment-retries "infinite"
---no-overwrites
---restrict-filenames
---output "./%(series)s/Season_%(season_number)s/%(episode_number)s_%(episode)s_%(id)s.%(ext)s"
---sleep-interval 5
---max-sleep-interval 10
