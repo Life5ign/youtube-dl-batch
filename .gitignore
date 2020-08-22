@@ -8,4 +8,6 @@ youtube-dl-batch.init
 config/**
 !config/base_config.template
 batch/**
+!batch/example_download_profile
 !batch/example_download_profile/**
+
