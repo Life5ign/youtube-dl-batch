@@ -10,12 +10,17 @@ export PATH=~/.pyenv/shims:~/.pyenv/bin:"$PATH"
 INIT_FILENAME="youtube-dl-batch.init"
 source $DIR/$INIT_FILENAME
 
+#define a temporary directory for storing joined config files
+TMP_DIR="${DIR}/tmp"
+
 #logger info
 main_logger () {
 	#basic logging info
 	echo -e "START_LOGFILE\n"
 	date
-	echo -e "Running $0\n"
+	#log pid to a file
+	echo -e "Running $0 with process id $$\n"
+	echo -e $$ > "${TMP_DIR}/${0}.pid"
 	return
 }
 
@@ -55,9 +60,6 @@ BATCH_DIR="${DIR}/batch"
 #cd to download directory
 cd $DOWNLOAD_DIR
 
-#define a temporary directory for storing joined config files
-TMP_DIR="${DIR}/tmp"
-
 #define paths and download media
 BASE_CONFIG_PATH="${DIR}/config/base_config"
 CONFIG_BASENAME="config"
@@ -74,6 +76,7 @@ for i in $(ls -1 "$BATCH_DIR"); do
 	config_joiner "$BASE_CONFIG_PATH" "$CURRENT_CONFIG_PATH" > "$TMP_CONFIG_FILE_PATH"
 	echo -e "Joined config file contents are:\n\n"
 	cat $TMP_CONFIG_FILE_PATH
+	echo -e "\n\n"
 	echo -e "The config file contains $(wc -l "$TMP_CONFIG_FILE_PATH") lines\n" 
 
 	#define the path of the batch file containing urls to be downloaded
