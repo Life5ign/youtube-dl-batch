@@ -84,9 +84,11 @@ for i in $(ls -1 "$BATCH_DIR"); do
 
 	#download the media
 	echo "Downloading media from $CURRENT_DIR" 
+	#use line continuation to make syntax clear
 	youtube-dl \
 		--download-archive "$ARCHIVE_FILE" \
 		--config-location "$TMP_CONFIG_FILE_PATH" \
 		--batch-file "$BATCH_FILE_PATH"
+	#report
 	echo "Finished downloading media from $CURRENT_DIR" 
 done
