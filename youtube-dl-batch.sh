@@ -50,7 +50,7 @@ fi
 cp $ARCHIVE_FILE "$ARCHIVE_FILE.b" 
 
 #define batch directory
-BATCH_DIR = $DIR/batch
+BATCH_DIR=$DIR/batch
 
 #cd to download directory
 cd $DOWNLOAD_DIR
@@ -59,26 +59,32 @@ cd $DOWNLOAD_DIR
 TMP_DIR=$DIR/tmp
 
 #define paths and download media
-BASE_CONFIG_PATH = "$DIR/config/base_config"
-CONFIG_BASENAME = "config"
-BATCH_BASENAME = "batch"
+BASE_CONFIG_PATH="$DIR/config/base_config"
+CONFIG_BASENAME="config"
+BATCH_BASENAME="batch"
 
 for i in $(ls -1 "$BATCH_DIR"); do
 	#join the base and current config files and write to the tmp directory
-	CURRENT_DIR = $BATCH_DIR/$i
-	CURRENT_CONFIG_PATH = $CURRENT_DIR/$CONFIG_BASENAME
-	JOINED_CONFIG = $(config_joiner $BASE_CONFIG_PATH $CURRENT_CONFIG_PATH)
-	TMP_CONFIG_FILE_PATH = "$TMP_DIR/$i_config.tmp"
-	echo $JOINED_CONFIG > $TMP_CONFIG_FILE_PATH 
-	
+	CURRENT_DIR="$BATCH_DIR/$i"
+	CURRENT_CONFIG_PATH="$CURRENT_DIR/$CONFIG_BASENAME"
+	JOINED_CONFIG="$(config_joiner $BASE_CONFIG_PATH $CURRENT_CONFIG_PATH)"
+	TMP_CONFIG_FILE_PATH="$TMP_DIR/$i_config.tmp"
+	echo $JOINED_CONFIG > "$TMP_CONFIG_FILE_PATH" 
+	echo "Joined config file contents are:"
+	cat "$TMP_CONFIG_FILE_PATH"
+	echo "The config file contains $(wc -l $TMP_CONFIG_FILE_PATH) lines" 
+
 	#define the path of the batch file containing urls to be downloaded
-	BATCH_FILE_PATH = "$CURRENT_DIR/$BATCH_BASENAME"
+	BATCH_FILE_PATH="$CURRENT_DIR/$BATCH_BASENAME"
+	echo "DEBUG: Batch file path is: $BATCH_FILE_PATH"
+	echo "DEBUG: Batch file contents' tail is:"
+	tail $BATCH_FILE_PATH
 
 	#download the media
 	echo "Downloading media from $CURRENT_DIR" 
 	youtube-dl \
-		--download-archive $ARCHIVE_FILE \
-		--config-location $TMP_CONFIG_FILE_PATH \ 
-		--batch-file $BATCH_FILE_PATH
+		--download-archive "$ARCHIVE_FILE" \
+		--config-location "$TMP_CONFIG_FILE_PATH" \ 
+		--batch-file "$BATCH_FILE_PATH"
 	echo "Finished downloading media from $BATCH_DIR/$i"
 done
