@@ -13,17 +13,17 @@ source $DIR/$INIT_FILENAME
 #logger info
 main_logger () {
 	#basic logging info
-	echo "START_LOGFILE"
+	echo -e "START_LOGFILE\n"
 	date
-	echo "Running $0"
+	echo -e "Running $0\n"
 	return
 }
 
 path_logger () {
 	#path and program info
-	echo "PATH is set to: $PATH"
-	echo "Using the following python: $(which python)"
-	echo "Using $(which youtube-dl)"
+	echo -e "PATH is set to: $PATH\n"
+	echo -e "Using the following python:\n$(which python)\n"
+	echo -e "Using $(which youtube-dl)\n"
 	return
 }
 
@@ -34,7 +34,7 @@ config_joiner () {
 	return
 }
 
-#log for this session
+#generate logs for this session
 main_logger
 path_logger
 
@@ -43,7 +43,7 @@ ARCHIVE_FILE="${DIR}/archive"
 
 #check to see if the file "archive" exists and create it if it doesn't
 if [ ! -f $ARCHIVE_FILE ]; then
-       echo 'Creating archive file..."' && touch $ARCHIVE_FILE
+       echo -e "Creating archive file...\n" && touch $ARCHIVE_FILE
 fi
 
 #copy the archive file to diff it later if useful
@@ -69,26 +69,26 @@ for i in $(ls -1 "$BATCH_DIR"); do
 	CURRENT_CONFIG_PATH="${CURRENT_DIR}/${CONFIG_BASENAME}"
 	#JOINED_CONFIG="$(config_joiner $BASE_CONFIG_PATH $CURRENT_CONFIG_PATH)"
 	TMP_CONFIG_FILE_PATH="${TMP_DIR}/${i}_config.tmp"
-	#echo $JOINED_CONFIG > "$TMP_CONFIG_FILE_PATH" 
+	#echo -e $JOINED_CONFIG > "$TMP_CONFIG_FILE_PATH" 
 	#try not using a variable for the config joining, instead redirecting to a file directly
-	config_joiner $BASE_CONFIG_PATH $CURRENT_CONFIG_PATH > "$TMP_CONFIG_FILE_PATH"
-	echo "Joined config file contents are:"
-	cat "$TMP_CONFIG_FILE_PATH"
-	echo "The config file contains $(wc -l $TMP_CONFIG_FILE_PATH) lines" 
+	config_joiner "$BASE_CONFIG_PATH" "$CURRENT_CONFIG_PATH" > "$TMP_CONFIG_FILE_PATH"
+	echo -e "Joined config file contents are:\n\n"
+	cat $TMP_CONFIG_FILE_PATH
+	echo -e "The config file contains $(wc -l "$TMP_CONFIG_FILE_PATH") lines\n" 
 
 	#define the path of the batch file containing urls to be downloaded
 	BATCH_FILE_PATH="${CURRENT_DIR}/${BATCH_BASENAME}"
-	echo "DEBUG: Batch file path is: $BATCH_FILE_PATH"
-	echo "DEBUG: Batch file contents' tail is:"
+	echo -e "DEBUG: Batch file path is: $BATCH_FILE_PATH\n"
+	echo -e "DEBUG: Batch file contents' tail is:\n"
 	tail $BATCH_FILE_PATH
 
 	#download the media
-	echo "Downloading media from $CURRENT_DIR" 
+	echo -e "Downloading media from $CURRENT_DIR\n" 
 	#use line continuation to make syntax clear
 	youtube-dl \
 		--download-archive "$ARCHIVE_FILE" \
 		--config-location "$TMP_CONFIG_FILE_PATH" \
 		--batch-file "$BATCH_FILE_PATH"
 	#report
-	echo "Finished downloading media from $CURRENT_DIR" 
+	echo -e "Finished downloading media from $CURRENT_DIR\n" 
 done
