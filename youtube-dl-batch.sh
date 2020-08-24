@@ -20,7 +20,7 @@ main_logger () {
 	date
 	#log pid to a file
 	echo -e "Running $0 with process id $$\n"
-	echo -e $$ > "${TMP_DIR}/${0}.pid"
+	echo -e $$ > "${TMP_DIR}/$(basename $0).pid"
 	return
 }
 
