@@ -76,8 +76,8 @@ for i in $(ls -1 "$BATCH_DIR"); do
 	config_joiner "$BASE_CONFIG_PATH" "$CURRENT_CONFIG_PATH" > "$TMP_CONFIG_FILE_PATH"
 	echo -e "Joined config file contents are:\n\n"
 	cat $TMP_CONFIG_FILE_PATH
-	echo -e "\n\n"
-	echo -e "The config file contains $(wc -l "$TMP_CONFIG_FILE_PATH") lines\n" 
+	echo -e "\n"
+	echo -e "The config file contains $(wc -l "$TMP_CONFIG_FILE_PATH" | sed -E "s/(^ *)([0-9]+)(.*)/\2/g") lines\n" 
 
 	#define the path of the batch file containing urls to be downloaded
 	BATCH_FILE_PATH="${CURRENT_DIR}/${BATCH_BASENAME}"
