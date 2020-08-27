@@ -13,6 +13,13 @@ source $DIR/$INIT_FILENAME
 #define a temporary directory for storing joined config files
 TMP_DIR="${DIR}/tmp"
 
+#create a logger function that sends its arguments to stdout and appends them to the logfile "${0}.${!}.log"
+logger_args () {
+	local LOGFILE
+	LOGFILE="${DIR}/$(basename ${0}).${!}.log"
+	echo -e "$@" | tee $LOGFILE
+}
+
 #logger info
 main_logger () {
 	#basic logging info
@@ -68,6 +75,7 @@ BATCH_BASENAME="batch"
 for i in $(ls -1 "$BATCH_DIR"); do
 	#join the base and current config files and write to the tmp directory
 	CURRENT_DIR="${BATCH_DIR}/${i}"
+	echo -e "Downloading content from ${CURRENT_DIR}...\n"
 	CURRENT_CONFIG_PATH="${CURRENT_DIR}/${CONFIG_BASENAME}"
 	#JOINED_CONFIG="$(config_joiner $BASE_CONFIG_PATH $CURRENT_CONFIG_PATH)"
 	TMP_CONFIG_FILE_PATH="${TMP_DIR}/${i}_config.tmp"
@@ -84,7 +92,7 @@ for i in $(ls -1 "$BATCH_DIR"); do
 	echo -e "DEBUG: Batch file path is: $BATCH_FILE_PATH\n"
 	echo -e "DEBUG: Batch file contents' tail is:\n"
 	tail $BATCH_FILE_PATH
-
+	echo -e "\n"
 	#download the media
 	echo -e "Downloading media from $CURRENT_DIR\n" 
 	#use line continuation to make syntax clear
