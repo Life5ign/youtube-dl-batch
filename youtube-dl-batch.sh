@@ -75,6 +75,12 @@ BATCH_BASENAME="batch"
 for i in $(ls -1 "$BATCH_DIR"); do
 	#join the base and current config files and write to the tmp directory
 	CURRENT_DIR="${BATCH_DIR}/${i}"
+	#if there is a pause file in this directory, go to the next directory
+	if [ -e "${CURRENT_DIR}/pause" ]; then
+		continue
+	fi
+
+	#otherwise, proceed with the download
 	echo -e "Downloading content from ${CURRENT_DIR}...\n"
 	CURRENT_CONFIG_PATH="${CURRENT_DIR}/${CONFIG_BASENAME}"
 	#JOINED_CONFIG="$(config_joiner $BASE_CONFIG_PATH $CURRENT_CONFIG_PATH)"
