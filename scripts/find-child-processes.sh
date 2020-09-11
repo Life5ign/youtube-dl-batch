@@ -9,6 +9,37 @@ usage () {
 	return
 }
 
+#logger info
+main_logger () {
+	#basic logging info
+	echo -e "START_LOGFILE\n"
+	date
+	#log pid to a file
+	echo -e "Running $0 with process id $$\n"
+	echo -e $$ > "${TMP_DIR}/$(basename $0).pid"
+	return
+}
+
+path_logger () {
+	#path and program info
+	echo -e "PATH is set to: $PATH\n"
+	echo -e "Using the following python:\n$(which python)\n"
+	echo -e "Pyenv is using the following python and version:\n$(pyenv which python)\n"
+	echo -e "Using the following youtube-dl:\n$(which youtube-dl)\n"
+	return
+}
+
+config_joiner () {
+	#takes 1 or more (config) files as arguments and joins them into one variable
+	#used for joining a base config file with directory specific config 
+	cat "$@"
+	return
+}
+
+#generate logs for this session
+main_logger
+path_logger
+
 #assign variables
 #define the directory containing this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
@@ -20,34 +51,32 @@ CHILD_PROCESS_FILE="${TMP_DIR}/$(basename -s ".sh" $0).pid"
 #if a single optional parameter was specified, representing a pid, use that as the group leading pid.
 #otherwise, read a pid from a file
 if [ "${1}" ]; then
-	echo -e "Using parameter ${1} as the group leading pid."
+echo -e "Using parameter ${1} as the group leading pid." >&2
 	#TODO input validation
 	GROUP_LEADER_PID="${1}"
 #otherwise, check for existence of file containing the group leading pid, and if it exists, assign the pid to a variable 
 elif [ -e "$PID_FILE" ]; then
-	echo -e "Found group leading pid file ${PID_FILE}\n"
+echo -e "Found group leading pid file ${PID_FILE}\n" >&2
 	GROUP_LEADER_PID=$(cat $PID_FILE | sed 's/ //g')
-	echo -e "Got pid $GROUP_LEADER_PID from ${PID_FILE}\n"
+	echo -e "Got pid $GROUP_LEADER_PID from ${PID_FILE}\n" 
 else
-	echo -e "No pid supplied, and failed to locate group leading pid file ${PID_FILE}\nExiting.\n"
+	echo -e "No pid supplied, and failed to locate group leading pid file ${PID_FILE}\nExiting.\n" 
 	exit 1
 fi
 
 #use the group leader pid to find processes with this pid as their group leader and write info about them to a file
 if [ -n "$GROUP_LEADER_PID" ]; then
 	echo -e "Found the following processes with group leader ${GROUP_LEADER_PID}:\n"
-	ps -xf -o pid,gid,pgid,rgid,tpgid -g $GROUP_LEADER_PID | tee $CHILD_PROCESS_INFO_FILE
-	echo -e "\n"
+	ps -cxf -o pid,gid,pgid,rgid,tpgid -g $GROUP_LEADER_PID | tee $CHILD_PROCESS_INFO_FILE
 	echo -e "Wrote info about these processes to ${CHILD_PROCESS_INFO_FILE}...\n"
-
 	#get the pids for these processes and write them to a file, one pid per line, for use later
-	echo -e "Writing process ids to ${CHILD_PROCESS_FILE}\n"
+echo -e "Writing process ids to ${CHILD_PROCESS_FILE}\n" >&2
 	#use sed to remove the header line from ps output and grab the pids in the first column for all the remaining lines
 	CHILD_PIDS="$(ps -x -o pid -g "$GROUP_LEADER_PID" | sed -En -e '1! s/(^ *)([0-9]+)(.*)/\2/g p')"
 	echo -e "$CHILD_PIDS" > $CHILD_PROCESS_FILE
 	
 else
-	echo -e "There was no group leading pid in ${PID_FILE}\n"
+	echo -e "There was no group leading pid in ${PID_FILE}\n" 
 fi
 
 #kill all processes
@@ -57,7 +86,7 @@ KILLSTATUS="$?"
 if [[ "$KILLSTATUS" ]]; then
 	echo "Successfully killed processes in ${CHILD_PROCESS_FILE}"
 else
-	echo -e "kill exited unsuccessfully with status ${KILLSTATUS}."
+	echo -e "kill exited unsuccessfully with status ${KILLSTATUS}"
 fi
 
 #if specified, kill the group led processes and the main process
