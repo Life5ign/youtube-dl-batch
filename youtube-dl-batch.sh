@@ -14,6 +14,19 @@ source $DIR/$INIT_FILENAME
 TMP_DIR="${DIR}/tmp"
 
 #create a logger function that sends its arguments to stdout and appends them to a logfile 
+exit_on_sig_SIGTERM () {
+	echo "Script terminated" 2>&1
+	exit 0
+}
+
+exit_on_sig_SIGINT () {
+	echo "Script interrupted" 2>&1
+	exit 0
+}
+
+trap exit_on_sig_SIGTERM SIGTERM
+trap exit_on_sig_SIGINT SIGINT
+
 logger_args () {
 	local LOGFILE
 	LOGFILE="${DIR}/$(basename ${0}).${!}.log"
