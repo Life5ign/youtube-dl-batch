@@ -6,23 +6,35 @@
 SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
 
 # define the directory containing the sourcing script
-SCRIPT_DIR="$(dirname $SCRIPTPATH)"
+DIR="$(dirname $SCRIPTPATH)"
 
 # the name of the sourcing script, without a .sh suffix; useful for creating
 # logging filenames
 BASENAME="$(basename -s ".sh" $0)"
 
 # the configuration directory's absolute path
-CONFIG_DIR="${SCRIPT_DIR}/config"
+CONFIG_DIR="${DIR}/config"
+
+# define the path to the base config file, which is applied to all
+# downloads 
+BASE_CONFIG_PATH="${CONFIG_DIR}/base_config"
+
+# define the generic base filenames for config files and batch files in each
+# download directory
+CONFIG_BASENAME="config"
+BATCH_BASENAME="batch"
 
 # the tmp directory's absolute path
-TMP_DIR="${SCRIPT_DIR}/tmp"
+TMP_DIR="${DIR}/tmp"
 
 # the batch directory's absolute path
-BATCH_DIR="${SCRIPT_DIR}/batch"
+BATCH_DIR="${DIR}/batch"
 
 # the script directory's absolute path
-SCRIPT_DIR="${SCRIPT_DIR}/scripts"
+DIR="${DIR}/scripts"
 
 # the location where media will be downloaded
 DOWNLOAD_DIR="$HOME/Music/youtube-dl/batch"
+
+# define archive file
+ARCHIVE_FILE="${DIR}/archive"

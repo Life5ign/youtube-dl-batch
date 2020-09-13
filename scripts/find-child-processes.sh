@@ -10,6 +10,10 @@ usage () {
 	return
 }
 
+# source variables
+source "../vars.sh"
+
+#TODO remove these functions and source them instead
 # logger info
 main_logger () {
 	# basic logging info
@@ -44,19 +48,21 @@ main_logger
 path_logger
 
 # assign variables
-# define the directory containing this script
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
-TMP_DIR="$(dirname ${DIR})/tmp"
+# the file where the parent process is located
 PID_FILE="${TMP_DIR}/youtube-dl-batch.sh.pid"
-CHILD_PROCESS_INFO_FILE="${TMP_DIR}/$(basename -s ".sh" $0).info"
-CHILD_PROCESS_FILE="${TMP_DIR}/$(basename -s ".sh" $0).pid"
+
+#files to store ps info
+CHILD_PROCESS_INFO_FILE="${TMP_DIR}/${BASENAME}.info"
+CHILD_PROCESS_FILE="${TMP_DIR}/${BASENAME}.pid"
 
 # if a single optional parameter was specified, representing a pid, use that as
 # the group leading pid.  #otherwise, read a pid from a file
 if [ "${1}" ]; then
+    
 echo -e "Using parameter ${1} as the group leading pid." >&2
 	# TODO input validation
 	GROUP_LEADER_PID="${1}"
+
 # otherwise, check for existence of file containing the group leading pid, and
 # if it exists, assign the pid to a variable 
 elif [ -e "$PID_FILE" ]; then
