@@ -1,7 +1,8 @@
 #!/bin/bash
 
-# source variables
+# source variables and functions
 source "./vars.sh"
+source "./functions.sh"
 
 # if the system is using pyenv, set PATH in order to use pyenv, not system
 # python
@@ -9,57 +10,8 @@ if [ -d "${HOME}/.pyenv" ]; then
     export PATH=~/.pyenv/shims:~/.pyenv/bin:"$PATH"
 fi
 
-# source init file with user specific settings as variables
-
-# define functions for traps
-exit_on_sig_SIGTERM () {
-    # this function calls a helper script to find and kill child processes that
-    # may have been started by this script, and exits, upon receiving the
-    # SIGTERM signal
-
-	echo "Script terminated" 2>&1
-	exit 0
-}
-
 # trap this script
 trap exit_on_sig_SIGTERM SIGTERM
-
-# create logger functions that send arguments to stdout and append them
-# to a logfile 
-logger_args () {
-	local LOGFILE
-	LOGFILE="${DIR}/${BASENAME}.log"
-	echo -e "$@" | tee -a $LOGFILE
-}
-
-# logger info
-main_logger () {
-	# basic logging info
-	echo -e "START_LOGFILE\n"
-	date
-	# log pid to a file
-	echo -e "Running $0 with process id $$\n"
-	echo -e $$ > "${TMP_DIR}/${BASENAME}.pid"
-	return
-}
-
-path_logger () {
-	# path and program info
-	echo -e "PATH is set to: $PATH\n"
-	echo -e "Using the following python:\n$(which python)\n"
-	echo -e "Pyenv is using the following python and version: \
-        \n$(pyenv which python)\n"
-	echo -e "Using the following youtube-dl:\n$(which youtube-dl)\n"
-	return
-}
-
-config_joiner () {
-    # takes 1 or more (config) files as arguments and joins them into one
-    # variable used for joining a base config file with directory specific
-    # config 
-	cat "$@"
-	return
-}
 
 # generate logs for this session
 main_logger
