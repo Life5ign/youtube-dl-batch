@@ -17,7 +17,7 @@ exit_on_sig_SIGTERM () {
 logger_args () {
     # this function send arguments to stdout and appends them to a logfile
 	local LOGFILE
-	LOGFILE="${DIR}/${BASENAME}.log"
+	LOGFILE="${DIR}/${BASENAME_S}.log"
 	echo -e "$@" | tee -a $LOGFILE
 
     return

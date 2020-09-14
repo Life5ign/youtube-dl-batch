@@ -1,16 +1,17 @@
 # file containing variables to be sourced
 
-# this variable will give the absolute path of the script that sources it,
-# regardless of where the file containing this variable declaration is
-# located
-SCRIPTPATH="$( cd "$(dirname "$0")" >/dev/null 2>&1 ; pwd -P )"
-
 # define the directory containing the sourcing script
-DIR="$(dirname $SCRIPTPATH)"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# define the basename of this script
+BASENAME="$(basename $0)"
+
+# define the absolute path of this script
+SCRIPTPATH="${DIR}/${BASENAME}"
 
 # the name of the sourcing script, without a .sh suffix; useful for creating
 # logging filenames
-BASENAME="$(basename -s ".sh" $0)"
+BASENAME_S="$(basename -s ".sh" $0)"
 
 # the configuration directory's absolute path
 CONFIG_DIR="${DIR}/config"
@@ -31,7 +32,7 @@ TMP_DIR="${DIR}/tmp"
 BATCH_DIR="${DIR}/batch"
 
 # the script directory's absolute path
-DIR="${DIR}/scripts"
+SCRIPT_DIR="${DIR}/scripts"
 
 # the location where media will be downloaded
 DOWNLOAD_DIR="$HOME/Music/youtube-dl/batch"
