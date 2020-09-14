@@ -1,7 +1,7 @@
 # define functions to be sourced
 
-# source variables
-source "./vars.sh"
+# source variables using git rev-parse
+source "$(git rev-parse --show-toplevel)/vars.sh"
 
 # define functions for traps
 exit_on_sig_SIGTERM () {
@@ -17,6 +17,8 @@ exit_on_sig_SIGTERM () {
 logger_args () {
     # this function send arguments to stdout and appends them to a logfile
 	local LOGFILE
+    # by default, we set this logger to write to a file that is located in the
+    # same directory as the script that sources this functions definition file
 	LOGFILE="${DIR}/${BASENAME_S}.log"
 	echo -e "$@" | tee -a $LOGFILE
 
@@ -30,7 +32,8 @@ main_logger () {
 
 	# log pid to a file
 	echo -e "Running $0 with process id $$\n"
-	echo -e $$ > "${TMP_DIR}/${BASENAME}.pid"
+    local tempfile="$(mktemp "${TMP_DIR}/${BASENAME_S}.$$.XXXXXXXXXX")"
+	echo -e $$ > $tempfile
 
 	return
 }
