@@ -35,7 +35,7 @@ BATCH_DIR="${DIR}/batch"
 SCRIPT_DIR="${DIR}/scripts"
 
 # the location where media will be downloaded
-DOWNLOAD_DIR="$HOME/Music/youtube-dl/batch"
+DOWNLOAD_DIR="${HOME}/Music/youtube-dl/batch"
 
 # define archive file
 ARCHIVE_FILE="${DIR}/archive"

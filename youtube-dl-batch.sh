@@ -1,8 +1,8 @@
 #!/bin/bash -x
 
-# source variables and functions
-source "./vars.sh"
-source "./functions.sh"
+# source variables and functions using git rev-parse
+source "$(git rev-parse --show-toplevel)/vars.sh"
+source "$(git rev-parse --show-toplevel)/functions.sh"
 
 # if the system is using pyenv, set PATH in order to use pyenv, not system
 # python
