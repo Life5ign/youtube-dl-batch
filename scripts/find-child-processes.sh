@@ -11,17 +11,36 @@ source "$(git rev-parse --show-toplevel)/functions.sh"
 
 # usage
 usage () {
-	echo "$(basename $0): usage: $(basename $0) [ --kill ] [ PID | pid_file ]"
+	echo "$(basename $0): usage: $(basename $0) [--kill] [--pid <pid> |
+        --file <file>]"
 	return
 }
+
+# process positional parameters using while, case, and shift
+kill_ps=
+pid_file=
+pid_number=
+
+while [[ -n $1 ]]; do
+    case $1 in
+        -p | --pid)     shift
+                        pid_number=$1
+                        ;;
+        -f | --file)    shift
+                        pid_file=$1
+                        ;;
+        -k | --kill)    kill_ps=1
+                        ;;
+        *)              usage >&2
+                        exit 1
+                        ;;
+    esac
+    shift
+done
 
 # generate logs for this session
 main_logger
 path_logger
-
-# assign variables
-# the file where the parent process is located
-PID_FILE="${TMP_DIR}/youtube-dl-batch.sh.pid"
 
 #files to store ps info
 CHILD_PROCESS_INFO_FILE="${TMP_DIR}/${BASENAME}.info"
@@ -37,13 +56,13 @@ echo -e "Using parameter ${1} as the group leading pid." >&2
 
 # otherwise, check for existence of file containing the group leading pid, and
 # if it exists, assign the pid to a variable 
-elif [ -e "$PID_FILE" ]; then
-echo -e "Found group leading pid file ${PID_FILE}\n" >&2
-	GROUP_LEADER_PID=$(cat $PID_FILE | sed 's/ //g')
-	echo -e "Got pid $GROUP_LEADER_PID from ${PID_FILE}\n" 
+elif [ -e "$pid_file" ]; then
+echo -e "Found group leading pid file ${pid_file}\n" >&2
+	GROUP_LEADER_PID=$(cat $pid_file | sed 's/ //g')
+	echo -e "Got pid $GROUP_LEADER_PID from ${pid_file}\n" 
 else
 	echo -e "No pid supplied, and failed to locate group leading pid file \
-        ${PID_FILE}\nExiting.\n" 
+        ${pid_file}\nExiting.\n" 
 	exit 1
 fi
 
@@ -66,7 +85,7 @@ echo -e "Writing process ids to ${CHILD_PROCESS_FILE}\n" >&2
 	echo -e "$CHILD_PIDS" > $CHILD_PROCESS_FILE
 	
 else
-	echo -e "There was no group leading pid in ${PID_FILE}\n" 
+	echo -e "There was no group leading pid in ${pid_file}\n" 
 fi
 
 # kill all processes
