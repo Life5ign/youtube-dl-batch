@@ -1,11 +1,6 @@
 # file containing variables to be sourced
 
-# define the project root directory, which is determined by the output of a git
-# rev-parse command
-PROJECT_ROOT_DIR="$(git rev-parse --show-toplevel)"
-
-# define the directory of any script that sources this file.  NOTE: this will
-# change based on the directory that this script is located in.
+# define the directory containing this script
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 # define the basename of the script that sources this file, without removing
@@ -20,7 +15,7 @@ SCRIPTPATH="${DIR}/${BASENAME}"
 BASENAME_S="$(basename -s ".sh" $0)"
 
 # the configuration directory's absolute path
-CONFIG_DIR="${PROJECT_ROOT_DIR}/config"
+CONFIG_DIR="${DIR}/config"
 
 # define the path to the base config file, which is applied to all
 # downloads 
@@ -32,16 +27,16 @@ CONFIG_BASENAME="config"
 BATCH_BASENAME="batch"
 
 # the tmp directory's absolute path
-TMP_DIR="${PROJECT_ROOT_DIR}/tmp"
+TMP_DIR="${DIR}/tmp"
 
 # the batch directory's absolute path
-BATCH_DIR="${PROJECT_ROOT_DIR}/batch"
+BATCH_DIR="${DIR}/batch"
 
 # the script directory's absolute path
-SCRIPT_DIR="${PROJECT_ROOT_DIR}/scripts"
+SCRIPT_DIR="${DIR}/scripts"
 
 # the location where media will be downloaded
 DOWNLOAD_DIR="${HOME}/Music/youtube-dl/batch"
 
 # define archive file
-ARCHIVE_FILE="${PROJECT_ROOT_DIR}/archive"
+ARCHIVE_FILE="${DIR}/archive"

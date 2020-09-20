@@ -1,8 +1,10 @@
-#!/bin/bash -x
+#!/bin/bash
 
-# source variables and functions using git rev-parse
-source "$(git rev-parse --show-toplevel)/vars.sh"
-source "$(git rev-parse --show-toplevel)/functions.sh"
+# define the directory containing this script
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+# source variables
+source "${DIR}/vars.sh"
 
 # if the system is using pyenv, set PATH in order to use pyenv, not system
 # python
@@ -10,12 +12,71 @@ if [ -d "${HOME}/.pyenv" ]; then
     export PATH=~/.pyenv/shims:~/.pyenv/bin:"$PATH"
 fi
 
-# trap this script
-trap exit_on_sig_SIGTERM SIGTERM
+# create logger functions  
+logger_args () {
+    # this function send arguments to stdout and appends them to a logfile
+	local LOGFILE
+    # by default, we set this logger to write to a file that is located in the
+    # same directory as the script that sources this functions definition file
+	LOGFILE="${DIR}/${BASENAME_S}.log"
+	echo -e "$@" | tee -a $LOGFILE
 
+    return
+}
+
+main_logger () {
+	# basic logging info
+	echo -e "START_LOGFILE\n"
+	date
+    echo -e "Running $0 with process id $$\n"
+    # log pid to a file
+    PID_FILE="$(mktemp "${TMP_DIR}/${BASENAME_S}.$$.XXXXXXXXXX")"
+    echo -e $$ > $PID_FILE
+
+	return
+}
+
+path_logger () {
+	# log path and program info
+	echo -e "PATH is set to: $PATH\n"
+	echo -e "Using the following python:\n$(which python)\n"
+	echo -e "Pyenv is using the following python and version: \
+        \n$(pyenv which python)\n"
+	echo -e "Using the following youtube-dl:\n$(which youtube-dl)\n"
+
+	return
+}
+
+config_joiner () {
+    # takes 1 or more (config) files as arguments and joins them into one
+    # variable used for joining a base config file with directory specific
+    # config 
+	cat "$@"
+    
+	return
+}
 # generate logs for this session
 main_logger
 path_logger
+
+# define functions for traps
+trap_handle () {
+    # clean up upon receiving SIGTERM or SIGINT
+    echo -e "Caught signal SIGTERM or SIGINT"
+    if [[ "$child" ]]; then
+        echo -e "Killing child process\n$(ps -o pid,comm $child)\nwith pid
+        $child"
+        kill -TERM $child
+    fi
+    
+    echo "${BASENAME}: Exiting"
+	exit 0
+
+    return
+}
+
+# trap SIGINT and SIGTERM for this script
+trap trap_handle INT TERM
 
 # check to see if the file "archive" exists and create it if it doesn't
 if [ ! -f $ARCHIVE_FILE ]; then
@@ -28,8 +89,14 @@ fi
 cp $ARCHIVE_FILE "${ARCHIVE_FILE}.b" 
 
 # cd to download directory
-cd $DOWNLOAD_DIR
+if [[ -d "$DOWNLOAD_DIR" ]] && cd $DOWNLOAD_DIR; then
+    echo "Changed directory to $DOWNLOAD_DIR"
+else
+    echo "Couldn't cd to ${DOWNLOAD_DIR}. Exiting."
+    exit 1
+fi
 
+# download media
 for i in $(ls -1 "$BATCH_DIR"); do
 	# join the base and current config files and write to the tmp directory
 	CURRENT_DIR="${BATCH_DIR}/${i}"
@@ -46,7 +113,6 @@ for i in $(ls -1 "$BATCH_DIR"); do
 
 	# join the local config file with the global config file and define a
     # filename
-    # TODO use mktemp and $$ to create random filename with the pid in it
 	CURRENT_CONFIG_PATH="${CURRENT_DIR}/${CONFIG_BASENAME}"
 	TMP_CONFIG_FILE_PATH="${TMP_DIR}/${i}_config.tmp"
 
@@ -63,11 +129,29 @@ for i in $(ls -1 "$BATCH_DIR"); do
 	# download the media
 	echo -e "\nDownloading media from $CURRENT_DIR\n" 
 
-	# use line continuation to make syntax clear
+	# execute youtube-dl in the background with the specified parameters 
 	youtube-dl \
 		--download-archive "$ARCHIVE_FILE" \
 		--config-location "$TMP_CONFIG_FILE_PATH" \
-		--batch-file "$BATCH_FILE_PATH"
+		--batch-file "$BATCH_FILE_PATH" \
+        &
 
-	echo -e "Finished downloading media from $CURRENT_DIR\n" 
+    # wait for this process so that the main script can catch SIGTERM or SIGINT
+    # and run the corresponding trap. We don't want to "exec" youtube-dl, since
+    # we need to keep the shell around to continue with the loop. There are
+    # likely some race conditions created here, so this approach could be
+    # improved upon.
+    child=$!
+    wait $child
+
+    # Log the success or failure of the last waited-for background command.
+    # wait, as called above, will exit with the exit status of the specified
+    # pid
+    wait_exit_status=$?
+    if [[ $wait_exit_status -gt 0 ]]; then
+        echo "There was an error: process $child exited with
+        status $wait_exit_status" 
+    else
+	    echo -e "Finished downloading media from $CURRENT_DIR\n" 
+    fi
 done
