@@ -89,11 +89,26 @@ fi
 cp $ARCHIVE_FILE "${ARCHIVE_FILE}.b" 
 
 # cd to download directory
-if [[ -d "$DOWNLOAD_DIR" ]] && cd $DOWNLOAD_DIR; then
-    echo "Changed directory to $DOWNLOAD_DIR"
+if [[ -d "$DOWNLOAD_DIR" ]]; then
+    if cd $DOWNLOAD_DIR; then
+        echo "Changed directory to $DOWNLOAD_DIR"
+    else
+        echo "Coudn't cd to ${DOWNLOAD_DIR}. Exiting."
+        exit 1
+    fi
 else
-    echo "Couldn't cd to ${DOWNLOAD_DIR}. Exiting."
-    exit 1
+    if mkdir -p $DOWNLOAD_DIR; then
+        echo "Created $DOWNLOAD_DIR"
+        if cd $DOWNLOAD_DIR; then
+            echo "Changed directory to ${DOWNLOAD_DIR}"
+        else
+            echo "Coudn't cd to ${DOWNLOAD_DIR}. Exiting."
+            exit 1
+        fi
+    else
+        echo "Couldn't create ${DOWNLOAD_DIR}. Exiting."
+        exit 1
+    fi
 fi
 
 # download media
