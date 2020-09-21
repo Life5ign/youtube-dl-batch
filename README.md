@@ -2,7 +2,7 @@
 each with specific configuration options, avoiding duplicate downloads
 
 - [INSTALLATION](#installation)
-- [DESCRIPTION & USAGE](#description & usage)
+- [DESCRIPTION & USAGE](#description)
 - [CONFIGURATION](#configuration)
 
 # INSTALLATION
@@ -12,7 +12,7 @@ To install `youtube-dl-batch`, `cd` to your desired directory and run:
     git clone "https://github.com/Life5ign/youtube-dl-batch.git"
     chmod +x ./youtube-dl-batch.sh
 
-# DESCRIPTION & USAGE
+# DESCRIPTION
 
 Usage:
 
