@@ -4,9 +4,8 @@
 **/*.pyc
 **/*.out
 **/*archive*
-youtube-dl-batch.init
 config/**
-!config/base_config.template
+!config/base_config
 batch/**
 !batch/example_download_profile
 !batch/example_download_profile/**

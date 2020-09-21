@@ -1,0 +1,16 @@
+# project-wide youtube-dl config file, which is used for all downloads.
+# Included by default are options that are useful when downloading large
+# batches.
+
+# comment out or remove any lines to stop applying them to downloads
+--verbose
+--no-progress
+--restrict-filenames
+--no-overwrites
+--no-mtime
+--retries "infinite"
+--fragment-retries "infinite"
+--sleep-interval 5
+--max-sleep-interval 10
+--ignore-errors
+--geo-bypass
