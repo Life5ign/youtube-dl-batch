@@ -1,0 +1,4 @@
+# add your youtube-dl configuration options here, one config option per line.
+# These will be added to the project-wide config file "config/base_config", for
+# this directory only.
+# <options>
