@@ -1,8 +1,8 @@
-youtube-dl-batch - a youtube-dl wrapper that downloads multiple batch files,
+**youtube-dl-batch** - a youtube-dl wrapper that downloads multiple batch files,
 each with specific configuration options, avoiding duplicate downloads
 
 - [INSTALLATION](#installation)
-- [DESCRIPTION & USAGE](#"description & usage")
+- [DESCRIPTION & USAGE](#description & usage)
 - [CONFIGURATION](#configuration)
 
 # INSTALLATION
