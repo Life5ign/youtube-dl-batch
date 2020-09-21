@@ -69,7 +69,7 @@ trap_handle () {
         kill -TERM $child
     fi
     
-    echo "${BASENAME}: Exiting"
+    echo -e "${BASENAME}:\n$(date)\nExiting"
 	exit 0
 
     return
