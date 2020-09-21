@@ -1,21 +1,25 @@
 youtube-dl-batch - a youtube-dl wrapper that downloads multiple batch files,
-each with specific config options, avoiding duplicate downloads
+each with specific configuration options, avoiding duplicate downloads
 
-- [INSTALLATION] #installation
-- [DESCRIPTION & USAGE] #"description & usage"
-- [CONFIGURATION] #configuration
+- [INSTALLATION](#installation)
+- [DESCRIPTION & USAGE](#"description & usage")
+- [CONFIGURATION](#configuration)
 
 # INSTALLATION
 
 To install `youtube-dl-batch`, `cd` to your desired directory and run:
 
-    git clone
-    chmod +x youtube-dl-batch.sh
+    git clone "https://github.com/Life5ign/youtube-dl-batch.git"
+    chmod +x ./youtube-dl-batch.sh
 
 # DESCRIPTION & USAGE
 
+Usage:
+
+    ./youtube-dl-batch.sh >> ./youtube-dl-batch.log 2>&1
+
 For those familiar with `youtube-dl`, `youtube-dl-batch` is essentially an
-automated mapping between batch files and config files, with a global download
+automated mapping between batch files and config files, with a project-wide download
 archive to prevent duplicate downloads.
 
 `youtube-dl-batch` examines each user-defined directory in the project's
@@ -38,6 +42,9 @@ however.
 certain hours of the day when data from a satellite ISP doesn't count toward a
 monthly billed quota (oftentimes in the vicinity of 02:00 to 08:00 every day).
 Do not add this to your root crontab; only add it to your user crontab.
+
+When `youtube-dl-batch` receives SIGTERM or SIGINT (CTRL-C), it will terminate
+any child `youtube-dl` process before exiting.
 
 # CONFIGURATION
 
