@@ -14,3 +14,5 @@
 --max-sleep-interval 10
 --ignore-errors
 --geo-bypass
+# best audio quality during post processing with ffmpeg or avconv
+--audio-quality 0
