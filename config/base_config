@@ -8,8 +8,8 @@
 --restrict-filenames
 --no-overwrites
 --no-mtime
---retries "infinite"
---fragment-retries "infinite"
+--retries 20
+--fragment-retries 20
 --sleep-interval 5
 --max-sleep-interval 10
 --ignore-errors
